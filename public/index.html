@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<!-- #12c2e9 -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Fira Sans"
+      rel="stylesheet"
+    />
+    <title>Weather notifier</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Fira Sans';
+        width: 100vw;
+        height: 100vh;
+        background: linear-gradient(to bottom right, #12c2e9 0%,#f64f59 99%);
+        background-repeat: none;
+        position: relative;
+      }
+
+      .header {
+        font-size: 24px;
+        margin-bottom: 12px;
+      }
+
+      .app {
+        width: 40%;
+        height: 240px;
+        text-align: left;
+        background: linear-gradient(to bottom right, #ffffff 0%,wheat 99%);
+        border-radius: 6px;
+        padding: 24px;
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 150px rgba(0, 0, 0, 0.15);
+      }
+
+      .form > *{
+        display: block;
+      }
+
+      .input-wrapper {
+        margin-bottom: 12px;
+        display: flex;
+      }
+
+      .input-label,
+      .input-box {
+        padding: 6px 12px;
+        font-size: 16px;
+        border: 1px solid #b9c7df;
+      }
+
+      .input-label {
+        border-radius: 6px 0 0 6px; 
+        background-color: #b9c7df;
+        margin-right: -5px;
+      }
+
+      .input-box {
+        border-radius: 0 6px 6px 0;
+      }
+
+      .input-box:focus {
+        outline: none;
+        border-color: #1146e7;
+      }
+
+      .button {
+        padding: 6px 12px;
+        font-size: 16px;
+        background-color: #b9c7df;
+        border-radius: 6px;
+        border: none; 
+        margin-right: 12px;
+        margin-bottom: 12px;
+      }
+      .action-panel{
+        display: flex;
+        align-items: center;
+      }
+      
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <h1 class="header">Weather forecast for Berlin and Jakarta</h1>
+      <h2 class="header">Enter E-mail below</h2>
+      <form action="" class="form">
+        <div class="input-wrapper">
+          <span class="input-label">Email</span>
+          <input id="email"
+            class="input-box"
+            type="email"
+            placeholder="example@mail.com"
+          />
+        </div>
+        <div class="action-panel"><button type="submit" class="button">Send weather</button>
+        <div id="returnMessage"></div>
+        </div>
+      </form>
+      <h4><i>Currently fully supports only Gmail.</i></h4>
+    </div>
+    <script>
+      const button = document.querySelector('.button')
+      button.addEventListener('click', async (event) => {
+        event.preventDefault()
+        const returnMessageDiv = document.getElementById('returnMessage')
+        const email = document.getElementById('email').value;
+        if (!email){
+          returnMessageDiv.innerText = 'Please enter a valid e-mail.'
+          return;
+        }
+        const response = await fetch('/sendEmail/',{
+          headers: {
+            "Content-Type":"application/json"
+          },
+          method: "POST",
+          body: JSON.stringify({
+            email,
+          })
+        })
+        const {message} = await response.json()
+        returnMessageDiv.innerText = message
+      })  
+    </script>
+  </body>
+</html>
